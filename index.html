@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chatbot</title>
+<style>
+    /* BARRA LATERAL */
+
+    ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: midnightblue; 
+    border-radius: 7px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: blue; 
+  }
+
+  /* FIM BARRA LATERAL */
+    body {
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url("https://wallpapers.com/images/hd/4k-ultra-hd-galaxy-violet-light-010hhxw343ytun9f.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    overflow: hidden;
+    }
+  
+  #chat-container {
+    background-color: rgb(255,255,255,0.9);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    height: fit-content;
+  }
+
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  #chat-history {
+    overflow-y: scroll;
+    height: 500px;
+    padding: 36px;
+  }
+  
+  .user-message {
+    text-align: right;
+    padding: 10px;
+    background-color: #c2c2c2;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    width: fit-content;
+    margin-left: auto; /* Alinha à direita */
+  }
+
+  .bot-message {
+    text-align: left;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+  }
+  
+  form {
+    display: flex;
+    margin-top: 36px;
+  }
+  
+  input {
+    flex-grow: 1;
+    padding: 16px;
+    margin-right: 16px;
+    border-radius: 50px;
+    background-color: #ffffff;
+    border: none;
+  }
+  
+  button {
+    background-color: darkblue;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  #loader {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Estilos para os cartões de opções rápidas */
+  #quick-options {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 100;
+  }
+
+  .quick-option {
+    background:darkblue;
+    color: white;
+    padding: 24px 24px;
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s all;
+  }
+
+  .quick-option:hover {
+    transform: scale(1.05);
+  }
+</style>
+</head>
+<body>
+  <div id="chat-container">
+    <h1>BARRINI (PORTAL 11)</h1>
+    <div id="chat-history"> 
+    </div>
+    <form id="chat-form">
+      <input type="text" id="user-input" placeholder="Enter your message">
+      <button type="submit">Send</button>
+    </form>
+  </div>
+  <div id="loader">
+    <img src="loader.gif" width="150px" alt="Loading...">
+  </div>
+  <!-- Opções rápidas de perguntas -->
+  <div id="quick-options">
+    <div class="quick-option" onclick="handleQuickOption('Quem é Barrini?')">Quem é Barrini?</div>
+    <div class="quick-option" onclick="handleQuickOption('Quero uma análise!')">Quero uma análise!</div>
+    <div class="quick-option" onclick="handleQuickOption('Como posso me relacionar com Gêmeos?')">Como posso me relacionar com Gêmeos?</div>
+  </div>
+
+  <script>
+    const chatHistory = document.getElementById('chat-history');
+    const userInput = document.getElementById('user-input');
+    const form = document.getElementById('chat-form');
+    const quickOptions = document.getElementById('quick-options');
+
+    // Função para formatar a mensagem com listas, negrito e quebras de linha
+    function formatMessage(message) {
+      message = message.replace(/\n/g, '<br>');
+      message = message.replace(/^\* /gm, '<ul><li>');
+      message = message.replace(/<\/li>\n<li>/g, '</li><br><li>');
+      message = message.replace(/<\/li>$/g, '</li></ul>');
+      message = message.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      return message;
+    }
+
+    // Função para enviar a mensagem e tratar a resposta do backend
+    async function sendMessage() {
+      const userMessage = userInput.value;
+      userInput.value = '';
+      console.log(userMessage);
+      try {
+        const response = await fetch('/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userInput: userMessage }),
+        });
+
+        const data = await response.json();
+        console.log(data);
+        const botMessage = data.response;
+        console.log(botMessage);
+
+        const formattedBotMessage = formatMessage(botMessage);
+        chatHistory.innerHTML += `<div class="user-message">${userMessage}</div>`;
+        chatHistory.innerHTML += `<p class="bot-message">${formattedBotMessage}</p>`;
+
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+
+        // Esconder as opções rápidas após o envio da mensagem
+        quickOptions.style.display = 'none';
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Função para exibir as opções rápidas
+    function showQuickOptions() {
+      quickOptions.style.display = 'block';
+    }
+
+    // Função chamada quando uma opção rápida é clicada
+    function handleQuickOption(option) {
+      userInput.value = option;
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const loader = document.getElementById('loader');
+      loader.style.display = 'block';
+      sendMessage().finally(() => {
+        loader.style.display = 'none';
+      });
+    });
+
+    // Exibir as opções rápidas quando o chat estiver vazio
+    window.addEventListener('load', () => {
+      if (!chatHistory.innerHTML) {
+        showQuickOptions();
+      }
+    });
+  </script>
+</body>
+</html>
