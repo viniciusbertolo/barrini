@@ -1,148 +1,199 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Chatbot</title>
-<style>
+  <title>Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+
+
     /* BARRA LATERAL */
 
     ::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  /* Track */
-  ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey; 
-    border-radius: 10px;
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: midnightblue; 
-    border-radius: 7px;
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: blue; 
-  }
-
-  /* FIM BARRA LATERAL */
-    body {
-    font-family: sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-image: url("https://wallpapers.com/images/hd/4k-ultra-hd-galaxy-violet-light-010hhxw343ytun9f.jpg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 100vh;
-    overflow: hidden;
+      width: 10px;
     }
-  
-  #chat-container {
-    background-color: rgb(255,255,255,0.9);
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    height: fit-content;
-  }
 
-  
-  h1 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  #chat-history {
-    overflow-y: scroll;
-    height: 500px;
-    padding: 36px;
-  }
-  
-  .user-message {
-    text-align: right;
-    padding: 10px;
-    background-color: #c2c2c2;
-    border-radius: 10px;
-    margin-bottom: 5px;
-    width: fit-content;
-    margin-left: auto; /* Alinha à direita */
-  }
+    /* Track */
+    ::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 5px grey;
+      border-radius: 10px;
+    }
 
-  .bot-message {
-    text-align: left;
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 5px;
-  }
-  
-  form {
-    display: flex;
-    margin-top: 36px;
-  }
-  
-  input {
-    flex-grow: 1;
-    padding: 16px;
-    margin-right: 16px;
-    border-radius: 50px;
-    background-color: #ffffff;
-    border: none;
-  }
-  
-  button {
-    background-color: darkblue;
-    color: white;
-    border: none;
-    padding: 10px 24px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  #loader {
-    display: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: midnightblue;
+      border-radius: 7px;
+    }
 
-  /* Estilos para os cartões de opções rápidas */
-  #quick-options {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    z-index: 100;
-  }
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: blue;
+    }
 
-  .quick-option {
-    background:darkblue;
-    color: white;
-    padding: 24px 24px;
-    border-radius: 8px;
-    margin: 5px;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 16px;
-    font-weight: bold;
-    transition: 0.3s all;
-  }
+    /* FIM BARRA LATERAL */
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url("https://wallpapers.com/images/hd/4k-ultra-hd-galaxy-violet-light-010hhxw343ytun9f.jpg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 100vh;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
 
-  .quick-option:hover {
-    transform: scale(1.05);
-  }
-</style>
+    #chat-container {
+      background-color: rgb(255, 255, 255, 0.9);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+      width: 80%;
+      height: fit-content;
+    }
+
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #chat-history {
+      overflow-y: scroll;
+      height: 500px;
+      padding: 36px;
+    }
+
+    .user-message {
+      text-align: right;
+      padding: 10px;
+      background-color: #c2c2c2;
+      border-radius: 10px;
+      margin-bottom: 5px;
+      width: fit-content;
+      margin-left: auto;
+      /* Alinha à direita */
+    }
+
+    .bot-message {
+      text-align: left;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 5px;
+    }
+
+    form {
+      display: flex;
+      margin-top: 36px;
+    }
+
+    input {
+      flex-grow: 1;
+      padding: 16px;
+      margin-right: 16px;
+      border-radius: 50px;
+      background-color: #ffffff;
+      border: none;
+    }
+
+    button {
+      background-color: darkblue;
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #loader {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Estilos para os cartões de opções rápidas */
+    #quick-options {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 100;
+    }
+
+    .quick-option {
+      background: darkblue;
+      color: white;
+      padding: 24px 24px;
+      border-radius: 8px;
+      margin: 5px;
+      cursor: pointer;
+      display: inline-block;
+      font-size: 16px;
+      font-weight: bold;
+      transition: 0.3s all;
+    }
+
+    .quick-option:hover {
+      transform: scale(1.05);
+    }
+
+    @media screen and (max-width: 768px) {
+      
+      
+      #chat-container {
+        width: 90%;
+      }
+      
+      h1 {
+        font-size: 1.8em;
+      }
+
+      input {
+        font-size: 1em;
+      }
+
+      #chat-history {
+      overflow-y: scroll;
+      height: 500px;
+      padding: 16px;
+    }
+
+      #quick-options {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      text-align: center;
+      z-index: 100;
+      width: 100%;
+      padding: 8px 8px;
+    }
+      .quick-option {
+      padding: 8px 8px;
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+      
+    }
+  </style>
 </head>
+
 <body>
   <div id="chat-container">
     <h1>BARRINI (PORTAL 11)</h1>
-    <div id="chat-history"> 
+    <div id="chat-history">
     </div>
     <form id="chat-form">
       <input type="text" id="user-input" placeholder="Enter your message">
@@ -156,7 +207,8 @@
   <div id="quick-options">
     <div class="quick-option" onclick="handleQuickOption('Quem é Barrini?')">Quem é Barrini?</div>
     <div class="quick-option" onclick="handleQuickOption('Quero uma análise!')">Quero uma análise!</div>
-    <div class="quick-option" onclick="handleQuickOption('Como posso me relacionar com Gêmeos?')">Como posso me relacionar com Gêmeos?</div>
+    <div class="quick-option" onclick="handleQuickOption('Como posso me relacionar com Gêmeos?')">Como posso me
+      relacionar com Gêmeos?</div>
   </div>
 
   <script>
@@ -234,4 +286,5 @@
     });
   </script>
 </body>
+
 </html>
